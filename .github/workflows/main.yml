@@ -1,0 +1,109 @@
+name: OrangeFox - Build (icecat)
+
+on:
+  workflow_dispatch:
+    inputs:
+      MANIFEST_BRANCH:
+        description: 'OrangeFox Manifest Branch'
+        required: true
+        default: '12.1'
+      DEVICE_TREE:
+        description: 'OrangeFox Device Tree'
+        required: true
+        default: 'https://gitlab.com/icecatm7-lab/a52sxq'
+      DEVICE_TREE_BRANCH:
+        description: 'OrangeFox Device Tree Branch'
+        required: true
+        default: 'fox_12.1'
+      DEVICE_PATH:
+        description: 'Specify your Device Path'
+        required: true
+        default: 'device/samsung/a52sxq'
+      DEVICE_NAME:
+        description: 'Specify your Device Codename'
+        required: true
+        default: 'a52sxq'
+      BUILD_TARGET:
+        description: 'Specify your Build Target'
+        required: true
+        default: 'recovery'
+        type: choice
+        options:
+          - recovery
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clean-up
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost \
+            "$AGENT_TOOLSDIRECTORY"
+          sudo docker image prune --all --force
+
+      - name: Set swap space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 12
+
+      - name: Prepare the build environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison build-essential ccache curl \
+            flex g++-multilib gcc-multilib git git-lfs gnupg gperf \
+            imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev \
+            liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev \
+            libxml2 libxml2-utils lzop pngcrush rsync schedtool \
+            squashfs-tools xsltproc zip zlib1g-dev python3
+
+      - name: Set-up Git
+        run: |
+          git config --global user.name "icecat"
+          git config --global user.email "icecat@users.noreply.github.com"
+
+      - name: Set-up OrangeFox source
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          cd ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          curl -s https://gitlab.com/OrangeFox/misc/scripts/-/raw/master/setup/orangefox_sync.sh | bash -s ${{ github.event.inputs.MANIFEST_BRANCH }}
+
+      - name: Clone device tree
+        run: |
+          cd ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          git clone --depth 1 -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} \
+            ${{ github.event.inputs.DEVICE_TREE }} ./${{ github.event.inputs.DEVICE_PATH }}
+
+      - name: Build OrangeFox
+        run: |
+          cd ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          set +e
+          source build/envsetup.sh
+          export ALLOW_MISSING_DEPENDENCIES=true
+          lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng
+          mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+
+      - name: Set release properties
+        run: |
+          echo "FILE_DATE=$(date +%Y%m%d)" >> $GITHUB_ENV
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ env.FILE_DATE }}
+          name: "OrangeFox Recovery for ${{ github.event.inputs.DEVICE_NAME }} // ${{ env.FILE_DATE }}"
+          body: |
+            Unofficial OrangeFox build for ${{ github.event.inputs.DEVICE_NAME }}, built by icecat.
+            Build workflow written independently — not derived from other build scripts.
+
+            Credits:
+            - OrangeFox Recovery core: https://gitlab.com/OrangeFox
+            - Original device tree (patched): ${{ github.event.inputs.DEVICE_TREE }}
+          files: |
+            fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
+            fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
