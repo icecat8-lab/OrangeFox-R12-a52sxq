@@ -10,7 +10,7 @@ on:
       DEVICE_TREE:
         description: 'OrangeFox Device Tree'
         required: true
-        default: 'https://gitlab.com/icecatm7-lab/a52sxq'
+        default: 'https://gitlab.com/icecatm7-lab/a52sxq/-/tree/fox_12.1?ref_type=heads'
       DEVICE_TREE_BRANCH:
         description: 'OrangeFox Device Tree Branch'
         required: true
