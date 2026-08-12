@@ -23,15 +23,6 @@ against the current OrangeFox source.
 
 No other changes were made to the original device tree.
 
-FEATURES TESTED
------------------
-- Boots successfully
-- Data decryption confirmed working on Android 16
-- File Manager, Backup, Wipe (Cache/Dalvik), Mount & MTP — all working
-- Magisk (root) — supported via Fox Addons, not personally tested
-- KernelSU modules menu — present in UI, but requires a kernel with 
-  built-in KernelSU support (not included in stock crDroid kernel; 
-  a separate custom kernel flash is needed for this to work)
 
 STATUS / DISCLAIMER
 --------------------
