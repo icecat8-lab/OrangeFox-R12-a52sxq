@@ -10,7 +10,7 @@ on:
       DEVICE_TREE:
         description: 'OrangeFox Device Tree'
         required: true
-        default: 'https://gitlab.com/icecatm7-lab/a52sxq.git'
+        default: 'https://gitlab.com/icecatm7-lab/a52sxq'
       DEVICE_TREE_BRANCH:
         description: 'OrangeFox Device Tree Branch'
         required: true
@@ -30,6 +30,8 @@ on:
         type: choice
         options:
           - recovery
+          - boot
+          - vendorboot
 
 jobs:
   build:
@@ -54,7 +56,7 @@ jobs:
 
       - name: Prepare the build environment
         run: |
-          sudo apt install aria2 ccache -y
+          sudo apt install aria2 -y
           git clone https://gitlab.com/OrangeFox/misc/scripts.git -b master
           cd scripts
           sudo bash setup/android_build_env.sh
@@ -63,14 +65,6 @@ jobs:
         run: |
           git config --global user.name "icecat"
           git config --global user.email "icecat@users.noreply.github.com"
-
-      - name: Setup Cache for CCACHE
-        uses: actions/cache@v4
-        with:
-          path: ~/.ccache
-          key: ${{ runner.os }}-ccache-${{ github.event.inputs.DEVICE_NAME }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-ccache-${{ github.event.inputs.DEVICE_NAME }}-
 
       - name: Set-up OrangeFox source
         run: |
@@ -93,10 +87,6 @@ jobs:
           set +e
           source build/envsetup.sh
           export ALLOW_MISSING_DEPENDENCIES=true
-          export USE_CCACHE=1
-          export CCACHE_EXEC=/usr/bin/ccache
-          export CCACHE_DIR=~/.ccache
-          ccache -M 15G
           set -e
           lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng
           make clean
