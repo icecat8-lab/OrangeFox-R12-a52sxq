@@ -1,11 +1,11 @@
-OrangeFox Recovery — Unofficial Build for a52sxq
+OrangeFox Recovery  Unofficial Build for a52sxq
 
 Version: R12.0_1
 Device: a52sxq (Samsung Galaxy A52s 5G)
 
 CREDITS
 -------
-- OrangeFox Recovery Project — original core source
+- OrangeFox Recovery Project  original core source
   https://gitlab.com/OrangeFox
 
   (Note: this device is currently unmaintained by the original team)
