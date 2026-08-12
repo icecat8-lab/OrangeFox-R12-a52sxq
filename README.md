@@ -22,12 +22,11 @@ No other changes were made to the original device tree.
 
 TESTED / WORKING
 -----------------
-- Boots successfully
-- Data decryption confirmed working on Android 16
-- File Manager — can read files on internal storage
-- MTP — working
-- ADB & Sideload — working
-- Reboot menu no boot loop
+- Boots successfully ✅
+- File Manager — can read files on internal storage ✅
+- MTP ✅
+- ADB ✅
+- Reboot menu no boot loop ✅
 
 
 STATUS / DISCLAIMER
