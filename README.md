@@ -27,6 +27,7 @@ TESTED / WORKING
 - MTP ✅
 - ADB ✅
 - Reboot menu ✅
+- Backup ✅
 
 
 STATUS / DISCLAIMER
