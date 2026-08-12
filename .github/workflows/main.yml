@@ -31,6 +31,7 @@ on:
         options:
           - recovery
 
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -67,19 +68,22 @@ jobs:
 
       - name: Set-up OrangeFox source
         run: |
-          mkdir -p ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-          cd ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-          curl -s https://gitlab.com/OrangeFox/misc/scripts/-/raw/master/setup/orangefox_sync.sh | bash -s ${{ github.event.inputs.MANIFEST_BRANCH }}
+          mkdir -p ${GITHUB_WORKSPACE}/OrangeFox
+          cd ${GITHUB_WORKSPACE}/OrangeFox
+          git clone https://gitlab.com/OrangeFox/sync.git
+          cd sync
+          chmod +x orangefox_sync.sh
+          ./orangefox_sync.sh --branch ${{ github.event.inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
 
       - name: Clone device tree
         run: |
-          cd ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
           git clone --depth 1 -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} \
             ${{ github.event.inputs.DEVICE_TREE }} ./${{ github.event.inputs.DEVICE_PATH }}
 
       - name: Build OrangeFox
         run: |
-          cd ${GITHUB_WORKSPACE}/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
           set +e
           source build/envsetup.sh
           export ALLOW_MISSING_DEPENDENCIES=true
@@ -103,7 +107,7 @@ jobs:
             - OrangeFox Recovery core: https://gitlab.com/OrangeFox
             - Original device tree (patched): ${{ github.event.inputs.DEVICE_TREE }}
           files: |
-            fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
-            fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
+            OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
+            OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
