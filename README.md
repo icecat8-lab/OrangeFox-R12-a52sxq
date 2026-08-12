@@ -23,10 +23,10 @@ No other changes were made to the original device tree.
 TESTED / WORKING
 -----------------
 - Boots successfully ✅
-- File Manager — can read files on internal storage ✅
+- File Manager can read files on internal storage ✅
 - MTP ✅
 - ADB ✅
-- Reboot menu no boot loop ✅
+- Reboot menu ✅
 
 
 STATUS / DISCLAIMER
