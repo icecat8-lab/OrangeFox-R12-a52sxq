@@ -35,6 +35,83 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clean-up
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /opt/hostedtoolcache/CodeQL /usr/local/share/boost \
+            "$AGENT_TOOLSDIRECTORY"
+          sudo docker image prune --all --force
+
+      - name: Set swap space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 12
+
+      - name: Prepare the build environment
+        run: |
+          sudo apt install aria2 -y
+          git clone https://gitlab.com/OrangeFox/misc/scripts.git -b master
+          cd scripts
+          sudo bash setup/android_build_env.sh
+
+      - name: Set-up Git
+        run: |
+          git config --global user.name "icecat"
+          git config --global user.email "icecat@users.noreply.github.com"
+
+      - name: Set-up OrangeFox source
+        run: |
+          mkdir -p ${GITHUB_WORKSPACE}/OrangeFox
+          cd ${GITHUB_WORKSPACE}/OrangeFox
+          git clone https://gitlab.com/OrangeFox/sync.git
+          cd sync
+          chmod +x orangefox_sync.sh
+          ./orangefox_sync.sh --branch ${{ github.event.inputs.MANIFEST_BRANCH }} --path ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+
+      - name: Clone device tree
+        run: |
+          cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          git clone --depth 1 -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} \
+            ${{ github.event.inputs.DEVICE_TREE }} ./${{ github.event.inputs.DEVICE_PATH }}
+
+      - name: Build OrangeFox
+        run: |
+          cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+          set +e
+          source build/envsetup.sh
+          export ALLOW_MISSING_DEPENDENCIES=true
+          set -e
+          lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng
+          make clean
+          mka adbd ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+
+      - name: Set release properties
+        run: |
+          echo "FILE_DATE=$(date +%Y%m%d)" >> $GITHUB_ENV
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ env.FILE_DATE }}
+          name: "OrangeFox Recovery for ${{ github.event.inputs.DEVICE_NAME }} // ${{ env.FILE_DATE }}"
+          body: |
+            Unofficial OrangeFox build for ${{ github.event.inputs.DEVICE_NAME }}, built by icecat.
+            Build workflow written independently — not derived from other build scripts.
+
+            Credits:
+            - OrangeFox Recovery core: https://gitlab.com/OrangeFox
+            - Original device tree (patched): ${{ github.event.inputs.DEVICE_TREE }}
+          files: |
+            OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
+            OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
