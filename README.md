@@ -1,0 +1,45 @@
+OrangeFox Recovery — Unofficial Build for a52sxq
+
+Version: R12.0_1
+Device: a52sxq (Samsung Galaxy A52s 5G)
+
+CREDITS
+-------
+- OrangeFox Recovery Project — original core source & UI
+  Team: MrYacha, DarthJabba9, Risen, fordownloads, and contributors
+  https://gitlab.com/OrangeFox
+
+- Original device tree for a52sxq
+  https://gitlab.com/OrangeFox/device/a52sxq
+  (Note: this device is currently unmaintained by the original team)
+
+WHAT WAS CHANGED
+-----------------
+The original device tree used a deprecated `FOX_VERSION` variable that 
+is no longer supported by the latest OrangeFox core, causing build 
+failures. This build patches `vendorsetup.sh` to use 
+`FOX_MAINTAINER_PATCH_VERSION` instead, allowing successful compilation 
+against the current OrangeFox source.
+
+No other changes were made to the original device tree.
+
+FEATURES TESTED
+-----------------
+- Boots successfully
+- Data decryption confirmed working on Android 16
+- File Manager, Backup, Wipe (Cache/Dalvik), Mount & MTP — all working
+- Magisk (root) — supported via Fox Addons, not personally tested
+- KernelSU modules menu — present in UI, but requires a kernel with 
+  built-in KernelSU support (not included in stock crDroid kernel; 
+  a separate custom kernel flash is needed for this to work)
+
+STATUS / DISCLAIMER
+--------------------
+This is an UNOFFICIAL, community-patched build — not endorsed or 
+tested by the OrangeFox Team. It has been personally tested and 
+confirmed working as listed above, but is provided as-is with no 
+warranty. Use at your own risk. Always back up your EFS/IMEI 
+partition before flashing.
+
+Patched by: ICECAT
+Patch source: https://gitlab.com/icecatm7-lab/a52sxq (branch: fox_12.1)
