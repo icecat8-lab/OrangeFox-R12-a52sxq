@@ -1,5 +1,3 @@
-
-
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
@@ -69,7 +67,8 @@ BOARD_ROOT_EXTRA_FOLDERS := \
     spu
 
 # Android Verified Boot
-BOARD_AVB_ENABLE := false
+BOARD_AVB_ENABLE := true
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 
 # Samsung TS drivers (a52sxq)
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
@@ -112,6 +111,10 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab
 # Use mke2fs to create ext4 images
 TARGET_USES_MKE2FS := true
 
+# OrangeFox Dynamic Partition & Input Utilities
+TW_ENABLE_ALL_PARTITION_TOOLS := true
+TW_INPUT_BLACKLIST := "hbtp_vm"
+
 # TWRP specific build flags
 TW_THEME := portrait_hdpi
 TW_SCREEN_BLANK_ON_BOOT := true
@@ -128,6 +131,5 @@ TARGET_RECOVERY_QCOM_RTC_FIX := true
 TW_BACKUP_EXCLUSIONS := /data/fonts
 TW_EXTRA_LANGUAGES := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_INCLUDE_CRYPTO := true
 TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_NTFS_3G := true
