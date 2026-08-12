@@ -5,7 +5,7 @@ Device: a52sxq (Samsung Galaxy A52s 5G)
 
 CREDITS
 -------
-- OrangeFox Recovery Project — original core source & UI
+- OrangeFox Recovery Project — original core source
   https://gitlab.com/OrangeFox
 
   (Note: this device is currently unmaintained by the original team)
