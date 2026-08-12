@@ -67,8 +67,7 @@ BOARD_ROOT_EXTRA_FOLDERS := \
     spu
 
 # Android Verified Boot
-BOARD_AVB_ENABLE := true
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
+BOARD_AVB_ENABLE := false
 
 # Samsung TS drivers (a52sxq)
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
