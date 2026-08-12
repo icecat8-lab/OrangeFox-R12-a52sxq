@@ -26,8 +26,11 @@ TESTED / WORKING
 - Can read files on internal storage ✅
 - MTP ✅
 - ADB ✅
+- Flashing .zip/.img ✅
+- Touch ✅
 - Reboot menu ✅
 - Backup ✅
+- Flashlight ✅
 
 
 STATUS / DISCLAIMER
