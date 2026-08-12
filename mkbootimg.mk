@@ -1,9 +1,4 @@
-#
-# Copyright (C) 2022 The Android Open Source Project
-# Copyright (C) 2022 The TWRP Open Source Project
-#
-# SPDX-License-Identifier: Apache-2.0
-#
+
 
 $(INSTALLED_BOOTIMAGE_TARGET): $(MKBOOTIMG) $(INTERNAL_BOOTIMAGE_FILES) $(BOOTIMAGE_EXTRA_DEPS)
 	$(call pretty,"Target boot image: $@")
