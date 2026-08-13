@@ -17,8 +17,6 @@ export FOX_USE_TAR_BINARY="1"
 export FOX_USE_SED_BINARY="1"
 export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER="1"
 export FOX_USE_XZ_UTILS="1"
-# Device-Specific Fixes
-export FOX_DYNAMIC_SAMSUNG_FIX="1"
 # Information
 export OF_MAINTAINER="Icecat"
 export FOX_BUILD_TYPE="Stable"
