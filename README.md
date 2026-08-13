@@ -38,8 +38,7 @@ STATUS / DISCLAIMER
 This is an UNOFFICIAL, community-patched build — not endorsed or 
 tested by the OrangeFox Team. It has been personally tested and 
 confirmed working as listed above, but is provided as-is with no 
-warranty. Use at your own risk. Always back up your EFS/IMEI 
-partition before flashing.
+warranty. Use at your own risk
 
 Patched by: ICECAT
 Patch source: https://gitlab.com/icecatm7-lab/a52sxq (branch: fox_12.1)
