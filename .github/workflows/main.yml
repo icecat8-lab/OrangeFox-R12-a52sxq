@@ -10,11 +10,11 @@ on:
       DEVICE_TREE:
         description: 'OrangeFox Device Tree'
         required: true
-        default: 'https://gitlab.com/icecatm7-lab/a52sxq'
+        default: 'https://github.com/icecat8-lab/OrangeFox-R12-a52sxq'
       DEVICE_TREE_BRANCH:
         description: 'OrangeFox Device Tree Branch'
         required: true
-        default: 'fox_12.1'
+        default: 'main'
       DEVICE_PATH:
         description: 'Specify your Device Path'
         required: true
@@ -107,7 +107,7 @@ jobs:
 
             Credits:
             - OrangeFox Recovery core: https://gitlab.com/OrangeFox
-            - Original device tree (patched): ${{ github.event.inputs.DEVICE_TREE }}
+            - Original device tree (patched, mirrored to GitHub): ${{ github.event.inputs.DEVICE_TREE }}
           files: |
             OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.img
             OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
