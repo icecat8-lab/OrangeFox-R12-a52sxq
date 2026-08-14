@@ -30,8 +30,6 @@ on:
         type: choice
         options:
           - recovery
-          - boot
-          - vendorboot
 
 jobs:
   build:
