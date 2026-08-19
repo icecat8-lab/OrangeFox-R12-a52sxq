@@ -40,4 +40,4 @@ tested by the OrangeFox Team. It has been personally tested and
 confirmed working as listed above Use at your own risk
 
 Patched by: ICECAT
-Patch source: https://gitlab.com/icecatm7-lab/a52sxq (branch: fox_12.1)
+Patch source: https://github.com/icecat8-lab/OrangeFox-R12-a52sxq (branch: fox_12.1)
